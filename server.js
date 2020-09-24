@@ -68,7 +68,24 @@ function mainMenu() {
 
 }
 
+function newDept() {
 
 
+};
 
-} 
+function newRole() {
+
+
+};
+
+function deptList() {
+
+
+};
+
+function updateRoles() {
+
+  
+}
+
+
