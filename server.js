@@ -19,9 +19,9 @@ connection.connect(function (err) {
 //function for the main menu 
 function mainMenu() {
 
-//main menu choices
+  //main menu choices
   inquirer.prompt([
-    { type: "list", name: "mainChoices", message: "Please Select Action", choices: ["Add a new Department", "Add a new Role", "Add a new Employee", "View a listing of Departments", "Update Employee Roles", "View Staff", "Exit"] }
+    { type: "list", name: "mainChoices", message: "Please Select Action", choices: ["Add a new Department", "Add a New Role", "Add a new Employee", "View a listing of Departments", "View Employee Roles", "Update Employee Roles", "View Staff", "Exit"] }
 
   ])
 
@@ -30,6 +30,10 @@ function mainMenu() {
 
       //switch statement that will call a function depending on which option a user selects
       switch (response.mainChoices) {
+        case "View Employee Roles":
+          viewRoles()
+          break
+
         case "Add a new Department":
           newDept()
           break
@@ -55,7 +59,7 @@ function mainMenu() {
           break
 
         //this is the ending option that will quit the application
-        default: exit()
+        default: connection.end();
 
       }
 
@@ -64,60 +68,41 @@ function mainMenu() {
 
 //function that will add a new department to the database
 function newDept() {
-  inquirer.prompt([{ type: "input", name: "newDeptname", message: "Please enter name of Department you wish to create"}, 
-])
+  inquirer.prompt([{ type: "input", name: "newDeptname", message: "Please enter name of Department you wish to create" },
+  ])
 
-  .then(response => {
+    .then(response => {
 
-    let query = "INSERT INTO department (name) VALUES (?)";
-    connection.query(query, {response: response.newDeptname }, function(err, res) {
-      if(err) throw err;
-      console.log("New Department added to System");
-      //executes query to show the updated list of departments
-      deptList();
-//executes function to show the main menu 
-      mainMenu();
+      let query = "INSERT INTO department SET ?";
+      connection.query(query, { name: response.newDeptname }, function (err, res) {
+        if (err) throw err;
+        console.log(response);
+        console.log("New Department added to System");
+        //executes query to show the updated list of departments
+        deptList();
+        connection.end();
+        //executes function to show the main menu 
+        mainMenu();
+      });
     });
-  });
 };
 
-function newRole() {
-
-  inquirer.prompt([{ type: "input", name: "newRolename", message: "Please enter name of employee role you wish to create"},
-  { type: "input", name: "newRolesalary", message: "Please enter the new role's salary"},
-  { type: "list", name: "newDepartment", message: "Please choose the department associated with the role", choices: ["this is where we need to pull the list of the depts"]}])
-
-  .then(response => {
-
-    let query = "INSERT INTO role (name, title, salary, department_id VALUES (?, ?, ?, ?)";
-    connection.query(query, [response.newRolename, response.newRolesalary, ], function(err, res) {
-      if(err) throw err;
-      console.log("New Department added to System");
-      //executes query to show the updated list of departments
-      deptList();
-//executes function to show the main menu 
-      mainMenu();
-    });
-  });
-
-
-};
 //function to pull a table listing all of the departments currently in database
 function deptList() {
-  connection.query("SELECT name FROM department", function(err, res) {
-    if(err) throw err;
+  connection.query("SELECT name FROM department", function (err, res) {
+    if (err) throw err;
     console.table(res);
     mainMenu();
   });
-  
-  };
 
+};
 
+//function to update the role of an existing employee
 function updateRoles() {
 
 
 };
-
+//function to see a table of all staff data. Will need to do an inner join
 function viewStaff() {
 
 
@@ -128,10 +113,44 @@ function newEmployee() {
 
 };
 
-function exit(){
+//function to create a new role in the database
+function newRole() {
+    connection.query("SELECT * FROM department", function (err, res) {
+    if (err) throw err;
+    console.log(res);
+    let departments = [];
+    departments = res.map(dept => ({ id: dept.id, name: dept.name }));
 
+    inquirer.prompt([{ type: "input", name: "newRolename", message: "Please enter name of employee role you wish to create" },
+    { type: "input", name: "newRolesalary", message: "Please enter the new role's salary" },
+    { type: "list", name: "newDepartment", message: "Please choose the department associated with the role", choices: departments.map(dept => ({ value: dept.id, name: dept.name })) }])
 
+      .then(response => {
+
+        let query = "INSERT INTO role SET ?";
+        let newRole = { title: response.newRolename, salary: response.newRolesalary, department_id: response.newDepartment }
+        connection.query(query, newRole, function (err, res) {
+          if (err) throw err;
+          console.log("New Role added to System");
+          //executes query to show the updated list of departments
+          // deptList();
+          //executes function to show the main menu 
+          mainMenu();
+        });
+      });
+  });
 };
+
+function viewRoles() {
+  connection.query("SELECT role.id, title as TITLE, salary as SALARY, department_id, name as NAME FROM role LEFT JOIN department ON role.department_id = department.id", function (err, res) {
+    if (err) throw err;
+    console.table(res, ["TITLE", "SALARY", "NAME"] );
+    connection.end()
+
+
+  });
+
+}
 
 
 
