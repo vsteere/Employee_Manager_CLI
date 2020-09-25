@@ -122,7 +122,7 @@ let roles = [];
       inquirer.prompt([
         {type: "input", name: "newempfname", message: "Please enter new employee's first name"},
         {type: "input", name: "newemplname", message: "Please enter new employee's last name"},
-        {type: "list", name: "newemprole", message: "Please choose the new employee's role", choices: "" },
+        {type: "list", name: "newemprole", message: "Please choose the new employee's role", choices: roles.map(role => ({ value: role.id, name: role.title})) },
         {type: "list", name: "newempmgr", message: "Please choose the new employee's manager", choices: ""}
           ])
 
