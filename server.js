@@ -71,7 +71,7 @@ function newDept() {
   inquirer.prompt([{ type: "input", name: "newDeptname", message: "Please enter name of Department you wish to create" },
   ])
     .then(response => {
-//learned the SET query from tutor
+      //learned the SET query from tutor
       let query = "INSERT INTO department SET ?";
       connection.query(query, { name: response.newDeptname }, function (err, res) {
         if (err) throw err;
@@ -110,13 +110,22 @@ function viewStaff() {
 function newEmployee() {
 
 
-};
+  inquirer.prompt([
+{type: "input", name: "newempfname", message: "Please enter new employee's first name"},
+{type: "input", name: "newemplname", message: "Please enter new employee's last name"},
+{type: "list", name: "newemprole", message: "Please choose the new employee's role", choices: "" },
+{type: "list", name: "newempmgr", message: "Please choose the new employee's manager", choices: ""}
+  ]
+  
+  )
+  
+  }
 
 //function to create a new role in the database WORKS
 function newRole() {
-    connection.query("SELECT * FROM department", function (err, res) {
+  connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
-    console.log(res);
+
     let departments = [];
     departments = res.map(dept => ({ id: dept.id, name: dept.name }));
 
@@ -138,12 +147,12 @@ function newRole() {
         });
       });
   });
-};
+}
 //function to show all roles currently in database. Uses a join to combine data from the department table so the item shown is the actual department and not the department ID. WORKS
 function viewRoles() {
   connection.query("SELECT role.id, title as TITLE, salary as SALARY, department_id, name as DEPARTMENT_NAME FROM role LEFT JOIN department ON role.department_id = department.id", function (err, res) {
     if (err) throw err;
-    console.table(res, ["TITLE", "SALARY", "DEPARTMENT_NAME"] );
+    console.table(res, ["TITLE", "SALARY", "DEPARTMENT_NAME"]);
     mainMenu();
     // connection.end()
 
@@ -151,6 +160,7 @@ function viewRoles() {
   });
 
 }
+
 
 
 
