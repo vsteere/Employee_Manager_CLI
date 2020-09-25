@@ -62,25 +62,56 @@ function mainMenu() {
     })
 };
 
-//function that will generate a table of all departments in the database
+//function that will add a new department to the database
 function newDept() {
-connection.query("SELECT name FROM department", function(err, res) {
-  if(err) throw err;
-  console.table(res);
-  mainMenu();
-});
+  inquirer.prompt([{ type: "input", name: "newDeptname", message: "Please enter name of Department you wish to create"}, 
+])
 
+  .then(response => {
+
+    let query = "INSERT INTO department (name) VALUES (?)";
+    connection.query(query, {response: response.newDeptname }, function(err, res) {
+      if(err) throw err;
+      console.log("New Department added to System");
+      //executes query to show the updated list of departments
+      deptList();
+//executes function to show the main menu 
+      mainMenu();
+    });
+  });
 };
 
 function newRole() {
 
+  inquirer.prompt([{ type: "input", name: "newRolename", message: "Please enter name of employee role you wish to create"},
+  { type: "input", name: "newRolesalary", message: "Please enter the new role's salary"},
+  { type: "list", name: "newDepartment", message: "Please choose the department associated with the role", choices: ["this is where we need to pull the list of the depts"]}])
+
+  .then(response => {
+
+    let query = "INSERT INTO role (name, title, salary, department_id VALUES (?, ?, ?, ?)";
+    connection.query(query, [response.newRolename, response.newRolesalary, ], function(err, res) {
+      if(err) throw err;
+      console.log("New Department added to System");
+      //executes query to show the updated list of departments
+      deptList();
+//executes function to show the main menu 
+      mainMenu();
+    });
+  });
+
 
 };
-
+//function to pull a table listing all of the departments currently in database
 function deptList() {
+  connection.query("SELECT name FROM department", function(err, res) {
+    if(err) throw err;
+    console.table(res);
+    mainMenu();
+  });
+  
+  };
 
-
-};
 
 function updateRoles() {
 
@@ -102,8 +133,5 @@ function exit(){
 
 };
 
-//starts the server
-app.listen(PORT, function () {
-  console.log("App listening on PORT: " + PORT);
-});
+
 
