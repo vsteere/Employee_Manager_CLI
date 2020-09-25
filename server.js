@@ -114,10 +114,12 @@ if(err) throw err;
 let departments = [];
     departments = res.map(dept => ({ id: dept.id, name: dept.name }));
 
-    connection.query("SELECT * from role", function(err, res) {
+    connection.query("SELECT last_name FROM employee WHERE manager_id IS NULL", function(err, res) {
 if(err) throw err;
-let roles = [];
-      roles = res.map(roles => ({ id: roles.id, title: roles.title, salary: roles.salary, department: roles.department_id}))
+let mgr = [];
+      mgr = res.map(roles => ({ id: roles.id, title: roles.title, salary: roles.salary, department: roles.department_id}))
+
+      //need to write a pull from the employee table of names where manager_id = null and push it to an array. This will give the user a choice of managers to select when adding employees
 
       inquirer.prompt([
         {type: "input", name: "newempfname", message: "Please enter new employee's first name"},
