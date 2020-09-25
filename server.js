@@ -66,13 +66,12 @@ function mainMenu() {
     })
 };
 
-//function that will add a new department to the database
+//function that will add a new department to the database. WORKS
 function newDept() {
   inquirer.prompt([{ type: "input", name: "newDeptname", message: "Please enter name of Department you wish to create" },
   ])
-
     .then(response => {
-
+//learned the SET query from tutor
       let query = "INSERT INTO department SET ?";
       connection.query(query, { name: response.newDeptname }, function (err, res) {
         if (err) throw err;
@@ -87,7 +86,7 @@ function newDept() {
     });
 };
 
-//function to pull a table listing all of the departments currently in database
+//function to pull a table listing all of the departments currently in database. WORKS
 function deptList() {
   connection.query("SELECT name FROM department", function (err, res) {
     if (err) throw err;
@@ -113,7 +112,7 @@ function newEmployee() {
 
 };
 
-//function to create a new role in the database
+//function to create a new role in the database WORKS
 function newRole() {
     connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
@@ -140,7 +139,7 @@ function newRole() {
       });
   });
 };
-//function to show all roles currently in database. Uses a join to combine data from the department table so the item shown is the actual department and not the department ID
+//function to show all roles currently in database. Uses a join to combine data from the department table so the item shown is the actual department and not the department ID. WORKS
 function viewRoles() {
   connection.query("SELECT role.id, title as TITLE, salary as SALARY, department_id, name as DEPARTMENT_NAME FROM role LEFT JOIN department ON role.department_id = department.id", function (err, res) {
     if (err) throw err;
