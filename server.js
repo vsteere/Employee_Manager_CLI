@@ -132,20 +132,21 @@ function newRole() {
         connection.query(query, newRole, function (err, res) {
           if (err) throw err;
           console.log("New Role added to System");
-          //executes query to show the updated list of departments
-          // deptList();
+          //executes query to show the updated list of roles
+          viewRoles();
           //executes function to show the main menu 
           mainMenu();
         });
       });
   });
 };
-
+//function to show all roles currently in database. Uses a join to combine data from the department table so the item shown is the actual department and not the department ID
 function viewRoles() {
-  connection.query("SELECT role.id, title as TITLE, salary as SALARY, department_id, name as NAME FROM role LEFT JOIN department ON role.department_id = department.id", function (err, res) {
+  connection.query("SELECT role.id, title as TITLE, salary as SALARY, department_id, name as DEPARTMENT_NAME FROM role LEFT JOIN department ON role.department_id = department.id", function (err, res) {
     if (err) throw err;
-    console.table(res, ["TITLE", "SALARY", "NAME"] );
-    connection.end()
+    console.table(res, ["TITLE", "SALARY", "DEPARTMENT_NAME"] );
+    mainMenu();
+    // connection.end()
 
 
   });
