@@ -119,19 +119,17 @@ if(err) throw err;
 let roles = [];
       roles = res.map(roles => ({ id: roles.id, title: roles.title, salary: roles.salary, department: roles.department_id}))
 
+      inquirer.prompt([
+        {type: "input", name: "newempfname", message: "Please enter new employee's first name"},
+        {type: "input", name: "newemplname", message: "Please enter new employee's last name"},
+        {type: "list", name: "newemprole", message: "Please choose the new employee's role", choices: "" },
+        {type: "list", name: "newempmgr", message: "Please choose the new employee's manager", choices: ""}
+          ])
 
     })
 
   })
 
-
-  inquirer.prompt([
-{type: "input", name: "newempfname", message: "Please enter new employee's first name"},
-{type: "input", name: "newemplname", message: "Please enter new employee's last name"},
-{type: "list", name: "newemprole", message: "Please choose the new employee's role", choices: "" },
-{type: "list", name: "newempmgr", message: "Please choose the new employee's manager", choices: ""}
-  ])
-  
   }
 
 //function to create a new role in the database WORKS
