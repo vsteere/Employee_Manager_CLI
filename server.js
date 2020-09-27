@@ -101,9 +101,15 @@ function updateRoles() {
 
 
 };
-//function to see a table of all staff data. Will need to do an inner join
+//function to view staff, departments, their salaries and roles WORKS
 function viewStaff() {
 
+connection.query("SELECT employee.first_name AS 'first name', employee.last_name AS 'last name', role.title AS 'position title', role.salary AS 'salary', department.name AS 'Department' FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id" , function(err, res) {
+  if(err) throw err;
+  console.table(res)
+  
+
+})
 
 };
 
