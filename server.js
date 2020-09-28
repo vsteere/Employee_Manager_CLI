@@ -21,7 +21,7 @@ function mainMenu() {
 
   //main menu choices
   inquirer.prompt([
-    { type: "list", name: "mainChoices", message: "Please Select Action", choices: ["Add a new Department", "Add a New Role", "Add a new Employee", "View a listing of Departments", "View Employee Roles", "Update Employee Roles", "View Staff", "View Managers", "Exit"] }
+    { type: "list", name: "mainChoices", message: "Please Select Action", choices: ["Add a new Department", "Add a New Role", "Add a new Employee", "View a listing of Departments", "View Employee Roles", "Update Employee Roles", "View Staff", "View Managers", "Delete a Department", "Exit"] }
 
   ])
 
@@ -62,6 +62,10 @@ function mainMenu() {
             viewManagers()
             break
 
+            case "Delete a Department":
+              deleteDept()
+              break
+
         //this is the ending option that will quit the application
         default: connection.end();
 
@@ -84,18 +88,18 @@ function newDept() {
         //executes query to show the updated list of departments
         deptList();
         
-        //executes function to show the main menu 
-        mainMenu();
+        //ends the connection
+             connecion.end();
       });
     });
 };
 
 //function to pull a table listing all of the departments currently in database. WORKS
 function deptList() {
-  connection.query("SELECT name FROM department", function (err, res) {
+  connection.query("SELECT id AS 'Department ID', name AS 'Department Name' FROM department", function (err, res) {
     if (err) throw err;
     console.table(res);
-    mainMenu();
+    connection.end();
   });
 
 };
@@ -108,12 +112,15 @@ function updateRoles() {
   ])
 
   .then(response => {
-let query = "UPDATE employee SET role_id = ? WHERE id = ??"
-connection.querty(query, [response.empID, response.emprole], function(err, res) {
+let query = "UPDATE employee SET role_id = ? WHERE id = ?";
+let updateData = [response.empID, response.emprole];
+let updateDataInt = updateData.map(Number);
+console.log(updateData);
+connection.query(query, updateData, function(err, res) {
 if(err) throw err;
 console.log("Role Updated");
 viewStaff();
-mainMenu();
+connection.end();
 
 })
 
@@ -130,7 +137,7 @@ function viewStaff() {
 connection.query("SELECT employee.id AS 'Employee ID', employee.first_name AS 'first name', employee.last_name AS 'last name', role.title AS 'position title', role.salary AS 'salary', department.name AS 'Department' FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id" , function(err, res) {
   if(err) throw err;
   console.table(res);
-  mainMenu();
+  connection.end();
   
 
 })
@@ -155,7 +162,7 @@ function newEmployee() {
 if(err) throw err;
 console.log("New Employee Added to System");
 viewStaff();
-mainMenu();
+connection.end();
 
 
     })
@@ -172,6 +179,7 @@ function newRole() {
     if (err) throw err;
 
     let departments = [];
+    //this converts an array of strings to INT, since the SQL data type is int for both of these columns. Source: https://stackoverflow.com/questions/4437916/how-to-convert-all-elements-in-an-array-to-integer-in-javascript
     departments = res.map(dept => ({ id: dept.id, name: dept.name }));
 
     inquirer.prompt([{ type: "input", name: "newRolename", message: "Please enter name of employee role you wish to create" },
@@ -187,8 +195,8 @@ function newRole() {
           console.log("New Role added to System");
           //executes query to show the updated list of roles
           viewRoles();
-          //executes function to show the main menu 
-          mainMenu();
+          
+          connection.end();
         });
       });
   });
@@ -199,8 +207,8 @@ function viewRoles() {
     if (err) throw err;
     // console.table(res, [role.id, "TITLE", "SALARY", "DEPARTMENT_NAME"]);
     console.table(res);
-    mainMenu();
-    // connection.end()
+    connection.end();
+   
 
 
   });
@@ -211,32 +219,32 @@ function viewManagers() {
   connection.query("SELECT id AS 'MANAGER ID', first_name AS 'FIRST NAME', last_name AS 'LAST NAME' from EMPLOYEE WHERE manager_id IS NULL", function(err, res) {
 if(err) throw err;
 console.table(res);
-mainMenu();
+connection.end();
 
   })
 };
-//DOES NOT WORK 
+//function to delete a department WORKS  
 function deleteDept() {
   connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
-
+//tutor showed this approach to create an array for selection later in inquirer
     let departments = [];
     departments = res.map(dept => ({ id: dept.id, name: dept.name }));
 
     inquirer.prompt([
-    { type: "list", name: "deleteDept", message: "Please choose a department to delete", choices: departments.map(dept => ({ value: dept.id, name: dept.name })) }])
+    { type: "list", name: "deleteDepart", message: "Please choose a department to delete", choices: departments.map(dept => ({ value: dept.id, name: dept.name })) }])
 
       .then(response => {
 
-        let query = "DELETE FROM department WHERE ?";
-        let newRole = { title: response.newRolename, salary: response.newRolesalary, department_id: response.newDepartment }
-        connection.query(query, newRole, function (err, res) {
+        let query = "DELETE FROM department WHERE id = ?";
+        let delDepartment = response.deleteDepart;
+        connection.query(query, delDepartment, function (err, res) {
           if (err) throw err;
-          console.log("New Role added to System");
-          //executes query to show the updated list of roles
-          viewRoles();
-          //executes function to show the main menu 
-          mainMenu();
+          console.log("Department Deleted");
+          //executes query to show the updated list of departments
+          deptList();
+          
+          connection.end();
         });
       });
   });
