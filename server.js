@@ -89,7 +89,7 @@ function newDept() {
         deptList();
         
         //ends the connection
-             connecion.end();
+             connection.end();
       });
     });
 };

@@ -12,6 +12,6 @@ The application also allows the user to delete departments from the database.
 ## Links
 
 GitHub Repository: https://github.com/vsteere/Employee_Manager_CLI
-Deployed application: 
+Deployed application: https://drive.google.com/file/d/1HIjg6bviOFgv_AKaIEuuTypFqpy-dk_a/view
 
 
