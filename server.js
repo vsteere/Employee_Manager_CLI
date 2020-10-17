@@ -121,11 +121,8 @@ function updateRoles() {
         console.log("Role Updated");
         viewStaff();
         connection.end();
-
       })
-
     }
-
 
     )
 
@@ -138,10 +135,7 @@ function viewStaff() {
     if (err) throw err;
     console.table(res);
     connection.end();
-
-
   })
-
 };
 
 //function to add a new employee to system WORKS
@@ -163,14 +157,8 @@ function newEmployee() {
         console.log("New Employee Added to System");
         viewStaff();
         connection.end();
-
-
       })
-
-
     })
-
-
 }
 
 //function to create a new role in the database WORKS
@@ -195,7 +183,6 @@ function newRole() {
           console.log("New Role added to System");
           //executes query to show the updated list of roles
           viewRoles();
-
           connection.end();
         });
       });
@@ -208,11 +195,7 @@ function viewRoles() {
     // console.table(res, [role.id, "TITLE", "SALARY", "DEPARTMENT_NAME"]);
     console.table(res);
     connection.end();
-
-
-
   });
-
 }
 
 function viewManagers() {
@@ -220,7 +203,6 @@ function viewManagers() {
     if (err) throw err;
     console.table(res);
     connection.end();
-
   })
 };
 //function to delete a department WORKS  
@@ -248,7 +230,6 @@ function deleteDept() {
         });
       });
   });
-
 
 }
 
