@@ -58,13 +58,13 @@ function mainMenu() {
           newEmployee()
           break
 
-          case "View Managers":
-            viewManagers()
-            break
+        case "View Managers":
+          viewManagers()
+          break
 
-            case "Delete a Department":
-              deleteDept()
-              break
+        case "Delete a Department":
+          deleteDept()
+          break
 
         //this is the ending option that will quit the application
         default: connection.end();
@@ -87,9 +87,9 @@ function newDept() {
         console.log("New Department added to System");
         //executes query to show the updated list of departments
         deptList();
-        
+
         //ends the connection
-             connection.end();
+        connection.end();
       });
     });
 };
@@ -108,25 +108,25 @@ function deptList() {
 function updateRoles() {
   inquirer.prompt([
     { type: "input", name: "empID", message: "Please enter the employee ID whose role you wish to change; reference employee report" },
-  { type: "input", name: "emprole", message: "Please enter the new role ID; reference role report" }
+    { type: "input", name: "emprole", message: "Please enter the new role ID; reference role report" }
   ])
 
-  .then(response => {
-let query = "UPDATE employee SET role_id = ? WHERE id = ?";
-let updateData = [response.empID, response.emprole];
-let updateDataInt = updateData.map(Number);
-console.log(updateData);
-connection.query(query, updateData, function(err, res) {
-if(err) throw err;
-console.log("Role Updated");
-viewStaff();
-connection.end();
+    .then(response => {
+      let query = "UPDATE employee SET role_id = ? WHERE id = ?";
+      let updateData = [response.empID, response.emprole];
+      let updateDataInt = updateData.map(Number);
+      console.log(updateData);
+      connection.query(query, updateData, function (err, res) {
+        if (err) throw err;
+        console.log("Role Updated");
+        viewStaff();
+        connection.end();
 
-})
+      })
 
-  }
-   
-       
+    }
+
+
     )
 
 
@@ -134,44 +134,44 @@ connection.end();
 //function to view staff, departments, their salaries and roles WORKS
 function viewStaff() {
 
-connection.query("SELECT employee.id AS 'Employee ID', employee.first_name AS 'first name', employee.last_name AS 'last name', role.title AS 'position title', role.salary AS 'salary', department.name AS 'Department' FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id" , function(err, res) {
-  if(err) throw err;
-  console.table(res);
-  connection.end();
-  
+  connection.query("SELECT employee.id AS 'Employee ID', employee.first_name AS 'first name', employee.last_name AS 'last name', role.title AS 'position title', role.salary AS 'salary', department.name AS 'Department' FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id", function (err, res) {
+    if (err) throw err;
+    console.table(res);
+    connection.end();
 
-})
+
+  })
 
 };
 
 //function to add a new employee to system WORKS
 function newEmployee() {
 
-//collect data for the new empoloyee
-      inquirer.prompt([
-        {type: "input", name: "newempfname", message: "Please enter new employee's first name"},
-        {type: "input", name: "newemplname", message: "Please enter new employee's last name"},
-        {type: "input", name: "newemprole", message: "Please choose the new employee's role ID; use role ID from roe report"},
-        {type: "input", name: "newempmgr", message: "Please choose the new employee's manager ID; use manager ID from manager report"}
-          ])
-//pushes data to the database
-  .then(response => {
-    let query = "INSERT INTO employee SET ?";
-    let newEmployee = { first_name: response.newempfname, last_name: response.newemplname, role_id: response.newemprole, manager_id: response.newempmgr}
-    connection.query(query, newEmployee, function(err, res) {
-if(err) throw err;
-console.log("New Employee Added to System");
-viewStaff();
-connection.end();
+  //collect data for the new empoloyee
+  inquirer.prompt([
+    { type: "input", name: "newempfname", message: "Please enter new employee's first name" },
+    { type: "input", name: "newemplname", message: "Please enter new employee's last name" },
+    { type: "input", name: "newemprole", message: "Please choose the new employee's role ID; use role ID from roe report" },
+    { type: "input", name: "newempmgr", message: "Please choose the new employee's manager ID; use manager ID from manager report" }
+  ])
+    //pushes data to the database
+    .then(response => {
+      let query = "INSERT INTO employee SET ?";
+      let newEmployee = { first_name: response.newempfname, last_name: response.newemplname, role_id: response.newemprole, manager_id: response.newempmgr }
+      connection.query(query, newEmployee, function (err, res) {
+        if (err) throw err;
+        console.log("New Employee Added to System");
+        viewStaff();
+        connection.end();
+
+
+      })
 
 
     })
 
-    
-  })        
 
-
-  }
+}
 
 //function to create a new role in the database WORKS
 function newRole() {
@@ -195,7 +195,7 @@ function newRole() {
           console.log("New Role added to System");
           //executes query to show the updated list of roles
           viewRoles();
-          
+
           connection.end();
         });
       });
@@ -208,7 +208,7 @@ function viewRoles() {
     // console.table(res, [role.id, "TITLE", "SALARY", "DEPARTMENT_NAME"]);
     console.table(res);
     connection.end();
-   
+
 
 
   });
@@ -216,10 +216,10 @@ function viewRoles() {
 }
 
 function viewManagers() {
-  connection.query("SELECT id AS 'MANAGER ID', first_name AS 'FIRST NAME', last_name AS 'LAST NAME' from EMPLOYEE WHERE manager_id IS NULL", function(err, res) {
-if(err) throw err;
-console.table(res);
-connection.end();
+  connection.query("SELECT id AS 'MANAGER ID', first_name AS 'FIRST NAME', last_name AS 'LAST NAME' from EMPLOYEE WHERE manager_id IS NULL", function (err, res) {
+    if (err) throw err;
+    console.table(res);
+    connection.end();
 
   })
 };
@@ -227,12 +227,12 @@ connection.end();
 function deleteDept() {
   connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
-//tutor showed this approach to create an array for selection later in inquirer
+    //tutor showed this approach to create an array for selection later in inquirer
     let departments = [];
     departments = res.map(dept => ({ id: dept.id, name: dept.name }));
 
     inquirer.prompt([
-    { type: "list", name: "deleteDepart", message: "Please choose a department to delete", choices: departments.map(dept => ({ value: dept.id, name: dept.name })) }])
+      { type: "list", name: "deleteDepart", message: "Please choose a department to delete", choices: departments.map(dept => ({ value: dept.id, name: dept.name })) }])
 
       .then(response => {
 
@@ -243,7 +243,7 @@ function deleteDept() {
           console.log("Department Deleted");
           //executes query to show the updated list of departments
           deptList();
-          
+
           connection.end();
         });
       });
