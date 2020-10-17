@@ -197,7 +197,7 @@ function viewRoles() {
     connection.end();
   });
 }
-
+//this functions creates a custom report to show employees who have manager roles
 function viewManagers() {
   connection.query("SELECT id AS 'MANAGER ID', first_name AS 'FIRST NAME', last_name AS 'LAST NAME' from EMPLOYEE WHERE manager_id IS NULL", function (err, res) {
     if (err) throw err;
