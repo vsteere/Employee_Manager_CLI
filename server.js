@@ -22,10 +22,7 @@ function mainMenu() {
   //main menu choices
   inquirer.prompt([
     { type: "list", name: "mainChoices", message: "Please Select Action", choices: ["Add a new Department", "Add a New Role", "Add a new Employee", "View a listing of Departments", "View Employee Roles", "Update Employee Roles", "View Staff", "View Managers", "Delete a Department", "Exit"] }
-
   ])
-
-
     .then(response => {
 
       //switch statement that will call a function depending on which option a user selects
@@ -74,7 +71,7 @@ function mainMenu() {
     })
 };
 
-//function that will add a new department to the database. WORKS
+//function that will add a new department to the database. 
 function newDept() {
   inquirer.prompt([{ type: "input", name: "newDeptname", message: "Please enter name of Department you wish to create" },
   ])
@@ -94,7 +91,7 @@ function newDept() {
     });
 };
 
-//function to pull a table listing all of the departments currently in database. WORKS
+//function to pull a table listing all of the departments currently in database. 
 function deptList() {
   connection.query("SELECT id AS 'Department ID', name AS 'Department Name' FROM department", function (err, res) {
     if (err) throw err;
@@ -126,9 +123,8 @@ function updateRoles() {
 
     )
 
-
 };
-//function to view staff, departments, their salaries and roles WORKS
+//function to view staff, departments, their salaries and roles 
 function viewStaff() {
 
   connection.query("SELECT employee.id AS 'Employee ID', employee.first_name AS 'first name', employee.last_name AS 'last name', role.title AS 'position title', role.salary AS 'salary', department.name AS 'Department' FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.department_id = department.id", function (err, res) {
@@ -138,7 +134,7 @@ function viewStaff() {
   })
 };
 
-//function to add a new employee to system WORKS
+//function to add a new employee to system 
 function newEmployee() {
 
   //collect data for the new empoloyee
@@ -188,11 +184,10 @@ function newRole() {
       });
   });
 }
-//function to show all roles currently in database. Uses a join to combine data from the department table so the item shown is the actual department and not the department ID. WORKS
+//function to show all roles currently in database. Uses a join to combine data from the department table so the item shown is the actual department and not the department ID. 
 function viewRoles() {
   connection.query("SELECT role.id AS 'Role ID', title as TITLE, salary as SALARY, name as DEPARTMENT_NAME FROM role LEFT JOIN department ON role.department_id = department.id", function (err, res) {
     if (err) throw err;
-    // console.table(res, [role.id, "TITLE", "SALARY", "DEPARTMENT_NAME"]);
     console.table(res);
     connection.end();
   });
@@ -205,7 +200,7 @@ function viewManagers() {
     connection.end();
   })
 };
-//function to delete a department WORKS  
+//function to delete a department   
 function deleteDept() {
   connection.query("SELECT * FROM department", function (err, res) {
     if (err) throw err;
