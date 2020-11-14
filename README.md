@@ -4,6 +4,9 @@ This project uses a MySQL database and Node.js to create a position control CLI 
 
 The application also allows the user to delete departments from the database. 
 
+## Technologies Used
+Node.js, MySQL database
+
 ## Images
 ![Alt text](/Assets/pic1.JPG?raw=true "image of CLI app")
 ![Alt text](/Assets/pic2.JPG?raw=true "image of CLI app")
